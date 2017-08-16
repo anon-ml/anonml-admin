@@ -58,6 +58,7 @@ public class RuleEditor extends VerticalLayout {
 
   public RuleEditor(RuleResource resource, Grid<RuleImpl> grid) {
     this.grid = grid;
+    this.resource = resource;
     HorizontalLayout top = new HorizontalLayout();
     HorizontalLayout buttons = new HorizontalLayout();
     buttons.addComponents(save, delete);
@@ -84,7 +85,7 @@ public class RuleEditor extends VerticalLayout {
     save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
     save.addClickListener(e -> {
-      resource.update(rule);
+      resource.update(rule.getId(), rule);
       onChange(resource, grid);
     });
     delete.addClickListener(e -> {
@@ -104,6 +105,7 @@ public class RuleEditor extends VerticalLayout {
   }
 
   public final void changeBoundRule(RuleImpl r) {
+    log.info("Click {}", r);
     rule = r;
     binder.setBean(rule);
     label.setSelectedItem(r.getLabel());

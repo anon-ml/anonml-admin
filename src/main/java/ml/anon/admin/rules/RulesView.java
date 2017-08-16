@@ -20,6 +20,7 @@ import ml.anon.recognition.rulebased.api.model.RuleImpl;
 import ml.anon.recognition.rulebased.api.resource.RuleResource;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by mirco on 16.08.17.
@@ -33,12 +34,13 @@ public class RulesView extends BaseView {
 
   private Grid<RuleImpl> grid = new Grid<>();
 
-  @Resource
+
   private RuleResource ruleResource;
 
-  public RulesView() {
+  @Autowired
+  public RulesView(RuleResource ruleResource) {
     super();
-
+    this.ruleResource = ruleResource;
     RuleEditor editor = new RuleEditor(ruleResource, grid);
     VerticalLayout mainLayout = new VerticalLayout(grid, editor);
     mainLayout.setMargin(false);
@@ -71,12 +73,10 @@ public class RulesView extends BaseView {
 
     Grid.Column<RuleImpl, String> deleteable = grid
         .addColumn(r -> BooleanUtils.toStringYesNo(!r.isCore()))
-        .setCaption("Constraints");
+        .setCaption("Deleteable");
     name.setExpandRatio(1);
     label.setExpandRatio(1);
     regEx.setExpandRatio(1);
-
-    grid.setCaption("RegEx Regeln");
 
     grid.setSizeFull();
     editor.setWidth(100, Unit.PERCENTAGE);
