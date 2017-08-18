@@ -1,30 +1,24 @@
 package ml.anon.admin.logs;
 
 import com.cedarsoftware.util.io.JsonWriter;
-import com.google.gwt.core.client.JsonUtils;
-import com.google.gwt.json.client.JSONObject;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FileDownloader;
-import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import lombok.extern.java.Log;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.springframework.web.client.AsyncRestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by mirco on 18.08.17.
@@ -32,10 +26,11 @@ import org.springframework.web.client.AsyncRestTemplate;
 @Log
 public class LogViewComponent extends VerticalLayout {
 
-  private final AsyncRestTemplate restTemplate = new AsyncRestTemplate();
+  private final RestTemplate restTemplate = new RestTemplate();
   private String title;
   private TextArea metrics;
   private String url;
+  private Label health = new Label();
 
   public LogViewComponent(String title, String url) {
     this.title = title;
@@ -64,6 +59,7 @@ public class LogViewComponent extends VerticalLayout {
       metrics();
     });
     layout.addComponent(refresh);
+    layout.addComponent(health);
 
     return layout;
   }
@@ -94,12 +90,24 @@ public class LogViewComponent extends VerticalLayout {
 
 
   private void metrics() {
-    restTemplate.getForEntity(url + "/metrics", String.class).addCallback(s -> {
-      metrics.setValue(JsonWriter.formatJson(s.getBody()));
-      log.info("Loaded metrics");
-    }, f -> {
-      metrics.setValue("Fehler : " + f.getLocalizedMessage());
-    });
+    try {
+      ResponseEntity<String> m = restTemplate.getForEntity(url + "/metrics", String.class);
+      metrics.setValue(JsonWriter.formatJson(m.getBody()));
+
+      Health h = restTemplate.getForEntity(url + "/health", Health.class).getBody();
+
+      health.setValue(
+          (h.isUp() ? VaadinIcons.ARROW_UP.getHtml() : VaadinIcons.QUESTION.getHtml()) + " " + h
+              .getStatus());
+      health.setContentMode(ContentMode.HTML);
+
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      health.setValue((VaadinIcons.BOMB.getHtml() + " DOWN"));
+      health.setContentMode(ContentMode.HTML);
+    }
+
 
   }
 

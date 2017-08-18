@@ -28,6 +28,10 @@ public class LogsView extends BaseView {
   public LogsView() {
     super();
     TabSheet tabs = new TabSheet();
+
+    tabs.addTab(new LogViewComponent("Frontend", "http://localhost:9900"), "Frontend",
+        VaadinIcons.DESKTOP);
+
     tabs.addTab(new LogViewComponent("Document", "http://localhost:9901"), "Document Management",
         VaadinIcons.FILE);
     tabs.addTab(new LogViewComponent("Rules", "http://localhost:9902"), "Rulebased Recogition",
@@ -36,9 +40,6 @@ public class LogsView extends BaseView {
     tabs.addTab(new LogViewComponent("Machine Learning", "http://localhost:9903"),
         "Machine Learning",
         VaadinIcons.AUTOMATION);
-
-    tabs.addTab(new LogViewComponent("Frontend", "http://localhost:9904"), "Frontend",
-        VaadinIcons.DESKTOP);
 
     tabs.setSizeFull();
     addComponent(tabs);
