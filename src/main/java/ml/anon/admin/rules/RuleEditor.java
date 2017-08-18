@@ -14,10 +14,9 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import ml.anon.anonymization.model.Label;
-import ml.anon.recognition.rulebased.api.model.RuleImpl;
+import ml.anon.recognition.rulebased.api.model.Rule;
 import ml.anon.recognition.rulebased.api.resource.RuleResource;
 
 import org.springframework.context.annotation.Scope;
@@ -31,9 +30,9 @@ import org.vaadin.ui.NumberField;
 @Slf4j
 public class RuleEditor extends VerticalLayout {
 
-  private final Grid<RuleImpl> grid;
+  private final Grid<Rule> grid;
 
-  private RuleImpl rule = RuleImpl.builder().build();
+  private Rule rule = Rule.builder().build();
 
   private TextField name = new TextField("Name");
 
@@ -49,14 +48,14 @@ public class RuleEditor extends VerticalLayout {
 
   private Button delete = new Button("Löschen", FontAwesome.REMOVE);
 
-  private Binder<RuleImpl> binder = new Binder<>(RuleImpl.class);
+  private Binder<Rule> binder = new Binder<>(Rule.class);
 
   private CssLayout actions = new CssLayout(save, delete);
 
 
   private RuleResource resource;
 
-  public RuleEditor(RuleResource resource, Grid<RuleImpl> grid) {
+  public RuleEditor(RuleResource resource, Grid<Rule> grid) {
     this.grid = grid;
     this.resource = resource;
     HorizontalLayout top = new HorizontalLayout();
@@ -97,14 +96,14 @@ public class RuleEditor extends VerticalLayout {
     this.resource = resource;
   }
 
-  private void onChange(RuleResource resource, Grid<RuleImpl> grid) {
+  private void onChange(RuleResource resource, Grid<Rule> grid) {
     grid.getDataProvider().refreshAll();
-    rule = RuleImpl.builder().build();
+    rule = Rule.builder().build();
     binder.setBean(rule);
 
   }
 
-  public final void changeBoundRule(RuleImpl r) {
+  public final void changeBoundRule(Rule r) {
     log.info("Click {}", r);
     rule = r;
     binder.setBean(rule);

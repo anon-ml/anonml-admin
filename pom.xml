@@ -35,6 +35,19 @@
 
   <dependencies>
 
+
+    <dependency>
+      <groupId>com.cedarsoftware</groupId>
+      <artifactId>json-io</artifactId>
+      <version>4.9.12</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>3.4.1</version>
+    </dependency>
+
     <dependency>
       <groupId>org.vaadin</groupId>
       <artifactId>viritin</artifactId>
