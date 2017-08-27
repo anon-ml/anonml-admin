@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,10 +38,9 @@ public class LogViewComponent extends VerticalLayout {
     this.url = url;
     Component buttons = buttons();
     metrics = logView();
-
     addComponents(buttons, metrics);
     setExpandRatio(metrics, 0.99f);
-    metrics.setValue("Lade ...");
+    metrics.setValue("");
     metrics();
     setSizeFull();
   }
@@ -84,7 +84,7 @@ public class LogViewComponent extends VerticalLayout {
           new StreamResource(streamSource, title + "_log.txt".toLowerCase()));
       fileDownloader.extend(button);
     } catch (Exception e) {
-
+      log.severe(e.getLocalizedMessage());
     }
   }
 
@@ -103,7 +103,7 @@ public class LogViewComponent extends VerticalLayout {
 
 
     } catch (Exception e) {
-      e.printStackTrace();
+      log.severe(title + " not available: " + e.getLocalizedMessage());
       health.setValue((VaadinIcons.BOMB.getHtml() + " DOWN"));
       health.setContentMode(ContentMode.HTML);
     }
