@@ -95,7 +95,7 @@ public class LogViewComponent extends VerticalLayout {
       metrics.setValue(JsonWriter.formatJson(m.getBody()));
 
       Health h = restTemplate.getForEntity(url + "/health", Health.class).getBody();
-
+      log.info(h.toString());
       health.setValue(
           (h.isUp() ? VaadinIcons.ARROW_UP.getHtml() : VaadinIcons.QUESTION.getHtml()) + " " + h
               .getStatus());
