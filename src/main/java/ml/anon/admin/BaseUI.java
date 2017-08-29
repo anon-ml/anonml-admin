@@ -53,7 +53,7 @@ public class BaseUI extends UI {
     base.setExpandRatio(container, 0.99f);
 
     navigator = new Navigator(this, container);
-    navigator.addView(DashboardView.ID, dashboardView);
+    // navigator.addView(DashboardView.ID, dashboardView);
     navigator.addView(RulesView.ID, rulesView);
     navigator.addView(LogsView.ID, logsView);
     navigator.addView(MLView.ID, mlView);
@@ -75,7 +75,7 @@ public class BaseUI extends UI {
 
     Button ml = new Button("Machine Learning");
     ml.addClickListener(e -> navigator.navigateTo(MLView.ID));
-    menu.addComponents(dashboard, logs, rules, ml);
+    menu.addComponents(logs, rules, ml);
     menu.setMargin(true);
     menu.setSpacing(true);
     return menu;

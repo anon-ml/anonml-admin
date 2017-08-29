@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 @Log
 public class LogsView extends BaseView {
 
-  public static final String ID = "LOGSVIEW";
+  public static final String ID = "";
   @Value("${web.actuator.url}")
   private String webUrl;
 

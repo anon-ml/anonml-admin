@@ -37,7 +37,7 @@ public class RulesView extends BaseView {
   public RulesView(RuleResource ruleResource) {
     super();
     this.ruleResource = ruleResource;
-    RuleEditor editor = new RuleEditor(ruleResource, grid);
+    RuleEditor editor = new RuleEditor(ruleResource, grid, this);
     VerticalLayout mainLayout = new VerticalLayout(grid, editor);
     mainLayout.setMargin(false);
 
@@ -51,8 +51,7 @@ public class RulesView extends BaseView {
 
     mainLayout.setSizeFull();
 
-    grid.setDataProvider(new RegExProvider());
-
+    grid.setItems(ruleResource.findAll());
     grid.addColumn(r -> BooleanUtils.toString(r.isActive(), "T", "F")).setCaption("Aktiv");
     Grid.Column<Rule, String> name = grid.addColumn(Rule::getName).setCaption("Name");
     Grid.Column<Rule, ml.anon.anonymization.model.Label> label = grid
@@ -79,29 +78,8 @@ public class RulesView extends BaseView {
 
   }
 
-  @PostConstruct
-  public void init() {
-
+  public void refresh() {
+    grid.setItems(ruleResource.findAll());
   }
-
-
-  @Override
-  public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-    System.out.print(viewChangeEvent);
-  }
-
-  private class RegExProvider extends AbstractBackEndDataProvider<Rule, Void> {
-
-    @Override
-    protected Stream<Rule> fetchFromBackEnd(Query<Rule, Void> query) {
-      return ruleResource.findAll().stream();
-    }
-
-    @Override
-    protected int sizeInBackEnd(Query<Rule, Void> query) {
-      return ruleResource.findAll().size();
-    }
-  }
-
 
 }
