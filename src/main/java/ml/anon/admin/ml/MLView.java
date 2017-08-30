@@ -14,6 +14,7 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.SucceededListener;
+import com.vaadin.ui.VerticalLayout;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
@@ -38,6 +40,8 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 import org.vaadin.easyuploads.UploadField;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
+import org.vaadin.viritin.layouts.MPanel;
+import org.vaadin.viritin.layouts.MVerticalLayout;
 import server.droporchoose.UploadComponent;
 
 /**
@@ -88,28 +92,43 @@ public class MLView extends BaseView {
                   });
         });
 
-    HorizontalLayout layout = new HorizontalLayout();
-    layout.addComponents(download, upload, retrain, retrainState);
+    VerticalLayout layout = new MVerticalLayout(new MPanel(download).withFullWidth(),
+        new MPanel(upload).withFullWidth(),
+        new MPanel(new MHorizontalLayout(retrain, retrainState)).withFullWidth());
     addComponent(layout);
   }
 
   private void updateRetrainState(String msg, String url) {
-
-    String body = restTemplate.getForEntity(url + "/ml/retrain/status", String.class)
-        .getBody();
-    if (body == null || "".equals(body)) {
-      toggleButtons(true);
-      retrainState.setValue("");
-    } else {
+    try {
+      String body = restTemplate.getForEntity(url + "/ml/retrain/status", String.class)
+          .getBody();
+      if (body == null || "".equals(body)) {
+        toggleButtons(true);
+        retrainState.setValue("");
+      } else {
+        toggleButtons(false);
+        retrainState.setValue(msg + " " + body);
+      }
+    } catch (Exception e) {
+      log.info("ML Service not available");
+      log.severe(e.getLocalizedMessage());
       toggleButtons(false);
-      retrainState.setValue(msg + " " + body);
+      retrainState.setValue(e.getLocalizedMessage());
     }
+
+  }
+
+
+  private void toggleButtons(boolean enabled) {
+    retrain.setEnabled(enabled);
+    upload.setEnabled(enabled);
+    download.setEnabled(enabled);
   }
 
   private void initUpload() {
     upload = new UploadComponent(this::uploadReceived);
-
-    upload.setFailedCallback(this::uploadFailed);
+    upload.setFailedCallback(
+        (fileName, file) -> Notification.show("Upload failed: " + fileName, Type.ERROR_MESSAGE));
     upload.setWidth(300, Unit.PIXELS);
     upload.setHeight(200, Unit.PIXELS);
     upload.setCaption("Trainingsdaten hinzufügen");
@@ -133,17 +152,6 @@ public class MLView extends BaseView {
           .show("Fehler beim Hinzufügen: " + fileName, Type.ERROR_MESSAGE);
     }
   }
-
-  private void uploadFailed(String fileName, Path file) {
-    Notification.show("Upload failed: " + fileName, Type.ERROR_MESSAGE);
-  }
-
-  private void toggleButtons(boolean enabled) {
-    retrain.setEnabled(enabled);
-    upload.setEnabled(enabled);
-    download.setEnabled(enabled);
-  }
-
 
   private void initDownloadButton(Button button, String url) {
     try {

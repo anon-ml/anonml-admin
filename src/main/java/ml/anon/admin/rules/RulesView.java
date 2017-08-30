@@ -7,6 +7,8 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -51,7 +53,7 @@ public class RulesView extends BaseView {
 
     mainLayout.setSizeFull();
 
-    grid.setItems(ruleResource.findAll());
+    loadRules(ruleResource, editor);
     grid.addColumn(r -> BooleanUtils.toString(r.isActive(), "T", "F")).setCaption("Aktiv");
     Grid.Column<Rule, String> name = grid.addColumn(Rule::getName).setCaption("Name");
     Grid.Column<Rule, ml.anon.anonymization.model.Label> label = grid
@@ -76,6 +78,18 @@ public class RulesView extends BaseView {
     grid.setSizeFull();
     editor.setWidth(100, Unit.PERCENTAGE);
 
+  }
+
+  private void loadRules(RuleResource ruleResource, RuleEditor editor) {
+    try {
+      grid.setItems(ruleResource.findAll());
+    } catch (Exception e) {
+      log.error("Rule service not available");
+      log.error(e.getLocalizedMessage());
+      grid.setEnabled(false);
+      editor.setEnabled(false);
+
+    }
   }
 
   public void refresh() {
