@@ -92,9 +92,15 @@ public class MLView extends BaseView {
                   });
         });
 
-    VerticalLayout layout = new MVerticalLayout(new MPanel(download).withFullWidth(),
-        new MPanel(upload).withFullWidth(),
-        new MPanel(new MHorizontalLayout(retrain, retrainState)).withFullWidth());
+    VerticalLayout layout = new MVerticalLayout(
+        new MPanel(new MHorizontalLayout(download,
+            new MHorizontalLayout(retrain, retrainState).withSpacing(true)).withSpacing(true)
+            .withMargin(true))
+            .withFullWidth(),
+        new MPanel(
+            new MHorizontalLayout(upload).withSpacing(true)
+                .withMargin(true)).withCaption("Trainingsdaten hinzufügen")
+            .withFullWidth());
     addComponent(layout);
   }
 
@@ -130,9 +136,10 @@ public class MLView extends BaseView {
     upload.setFailedCallback(
         (fileName, file) -> Notification.show("Upload failed: " + fileName, Type.ERROR_MESSAGE));
     upload.setWidth(300, Unit.PIXELS);
-    upload.setHeight(200, Unit.PIXELS);
-    upload.setCaption("Trainingsdaten hinzufügen");
+    upload.setHeight(100, Unit.PIXELS);
+
     upload.setDescription("");
+
 
   }
 
