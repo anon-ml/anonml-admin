@@ -149,7 +149,7 @@ public class MLView extends BaseView {
         .show("Trainingsdaten erfolgreich hinzugefügt: " + fileName, Type.TRAY_NOTIFICATION);
     String str = Files.lines(file).collect(Collectors.joining("\n"));
     Boolean body = restTemplate
-        .exchange(url + "/ml/post/training/data/", HttpMethod.POST, new HttpEntity<>(str),
+        .exchange(url + "/ml/post/training/data/false/", HttpMethod.POST, new HttpEntity<>(str),
             Boolean.class).getBody();
     if (body) {
       Notification
