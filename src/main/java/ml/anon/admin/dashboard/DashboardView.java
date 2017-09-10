@@ -6,31 +6,40 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import lombok.extern.java.Log;
 import ml.anon.admin.BaseView;
 import ml.anon.documentmanagement.model.Document;
 import ml.anon.documentmanagement.resource.DocumentResource;
+import ml.anon.recognition.machinelearning.model.EvaluationData;
 import ml.anon.recognition.machinelearning.resource.EvaluationDataResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.grid.MGrid;
+import org.vaadin.viritin.label.MLabel;
+import org.vaadin.viritin.layouts.MGridLayout;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
+import org.vaadin.viritin.layouts.MPanel;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import javax.annotation.Resource;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by mirco on 16.08.17.
  */
 @SpringComponent
 @UIScope
+@Log
 public class DashboardView extends BaseView {
 
     public static final String ID = "";
@@ -38,7 +47,6 @@ public class DashboardView extends BaseView {
 
     private DocumentResource documentResource;
 
-    private EvaluationDataResource evaluationDataResource;
 
     private MGrid<Document> docGrid = new MGrid<>(Document.class).withFullSize().withProperties("fileName");
 
@@ -52,24 +60,37 @@ public class DashboardView extends BaseView {
         docGrid.addColumn(d -> d.getAnonymizations() == null ? '-' : d.getAnonymizations().size()).setCaption("Anonymizations");
 
         docGrid.setRows(getContent());
-        addComponent(new MVerticalLayout().add(new MButton(FontAwesome.TRASH, e -> {
-            if (docGrid.getSelectedItems().size() == 1) {
-                ConfirmDialog.show(getUI(), "Confirm delete", a -> {
-                    documentResource.delete(Iterables.getFirst(docGrid, null).getId());
-                });
-            }
+        addComponent(new MVerticalLayout().add(scoreOverview(evaluationDataResource.findById(null)))
+                .add(docGrid.withCaption("Zuletzt bearbeitet")));
 
-
-        })).add(docGrid, 0.99f));
 
     }
 
 
     private List<Document> getContent() {
         List<Document> all = documentResource.findAll();
-        Collections.sort(all, Comparator.comparing(Document::getCreated));
+        Collections.sort(all, Comparator.comparing(Document::getLastModified));
         return all.subList(0, Math.min(10, all.size()));
     }
 
+
+    private Component scoreOverview(EvaluationData data) {
+        MGridLayout grid = new MGridLayout(2, 6);
+        grid.with(label("Erstellte Anonymisierungen"), label(data.getTotalGenerated()));
+        grid.with(label("Manuell berichtigt"), label(data.getTotalCorrected()));
+        grid.with(label("Korrekt gefunden"), label(data.getTotalNumberOfCorrectFound()));
+
+        grid.with(label("Precision insgesamt"), label(data.getOverallPrecision()));
+        grid.with(label("Recall insgesamt"), label(data.getOverallRecall()));
+        grid.with(label("F1 insgesamt"), label(data.getOverallFOne()));
+        return new MPanel(grid.withMargin(true)).withCaption("Statistik");
+    }
+
+    private MLabel label(Object object) {
+        if (object instanceof Double) {
+            return new MLabel(NumberFormat.getInstance().format(object));
+        }
+        return new MLabel(Objects.toString(object));
+    }
 
 }
