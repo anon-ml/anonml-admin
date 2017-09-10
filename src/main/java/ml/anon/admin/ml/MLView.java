@@ -58,7 +58,7 @@ public class MLView extends BaseView {
   private final RestTemplate restTemplate = new RestTemplate();
   private final AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
   private Label retrainState = new Label();
-  private Button retrain = new Button("Training starten", FontAwesome.MAGIC);
+  private Button retrain = new Button("Training starten", FontAwesome.GRADUATION_CAP);
   Button download = new Button("Trainingsdaten exportieren", FontAwesome.DOWNLOAD);
   UploadComponent upload;
   private String url;

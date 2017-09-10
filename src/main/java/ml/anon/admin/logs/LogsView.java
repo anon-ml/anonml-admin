@@ -10,7 +10,9 @@ import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
+
 import javax.annotation.PostConstruct;
+
 import lombok.extern.java.Log;
 import ml.anon.admin.BaseView;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,37 +28,37 @@ import org.springframework.web.client.RestTemplate;
 @Log
 public class LogsView extends BaseView {
 
-  public static final String ID = "";
-  @Value("${web.actuator.url}")
-  private String webUrl;
+    public static final String ID = "LOGVIEW";
+    @Value("${web.actuator.url}")
+    private String webUrl;
 
-  @Value("${documentmanagement.actuator.url}")
-  private String documentManagementUrl;
+    @Value("${documentmanagement.actuator.url}")
+    private String documentManagementUrl;
 
-  @Value("${rulebased.actuator.url}")
-  private String rulebasedUrl;
+    @Value("${rulebased.actuator.url}")
+    private String rulebasedUrl;
 
-  @Value("${machinelearning.actuator.url}")
-  private String machinelearningUrl;
+    @Value("${machinelearning.actuator.url}")
+    private String machinelearningUrl;
 
-  @PostConstruct
-  public void init() {
-    TabSheet tabs = new TabSheet();
+    @PostConstruct
+    public void init() {
+        TabSheet tabs = new TabSheet();
 
-    tabs.addTab(new LogViewComponent("Frontend", webUrl), "Frontend",
-        VaadinIcons.DESKTOP);
+        tabs.addTab(new LogViewComponent("Frontend", webUrl), "Frontend",
+                VaadinIcons.DESKTOP);
 
-    tabs.addTab(new LogViewComponent("Document", documentManagementUrl), "Document Management",
-        VaadinIcons.FILE);
-    tabs.addTab(new LogViewComponent("Rules", rulebasedUrl), "Rulebased Recogition",
-        VaadinIcons.BAN);
+        tabs.addTab(new LogViewComponent("Document", documentManagementUrl), "Document Management",
+                VaadinIcons.FILE);
+        tabs.addTab(new LogViewComponent("Rules", rulebasedUrl), "Rulebased Recogition",
+                VaadinIcons.BAN);
 
-    tabs.addTab(new LogViewComponent("Machine Learning", machinelearningUrl),
-        "Machine Learning",
-        VaadinIcons.AUTOMATION);
+        tabs.addTab(new LogViewComponent("Machine Learning", machinelearningUrl),
+                "Machine Learning",
+                VaadinIcons.AUTOMATION);
 
-    tabs.setSizeFull();
-    addComponent(tabs);
-  }
+        tabs.setSizeFull();
+        addComponent(tabs);
+    }
 
 }
