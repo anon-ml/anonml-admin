@@ -29,10 +29,7 @@ import javax.annotation.Resource;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by mirco on 16.08.17.
@@ -68,22 +65,35 @@ public class DashboardView extends BaseView {
 
 
     private List<Document> getContent() {
-        List<Document> all = documentResource.findAll();
-        Collections.sort(all, Comparator.comparing(Document::getLastModified));
-        return all.subList(0, Math.min(10, all.size()));
+        try {
+            List<Document> all = documentResource.findAll();
+            Collections.sort(all, Comparator.comparing(Document::getLastModified));
+            return all.subList(0, Math.min(10, all.size()));
+        } catch (Exception e) {
+            log.severe(e.getLocalizedMessage());
+            return new ArrayList<>();
+        }
+
     }
 
 
     private Component scoreOverview(EvaluationData data) {
-        MGridLayout grid = new MGridLayout(2, 6);
-        grid.with(label("Erstellte Anonymisierungen"), label(data.getTotalGenerated()));
-        grid.with(label("Manuell berichtigt"), label(data.getTotalCorrected()));
-        grid.with(label("Korrekt gefunden"), label(data.getTotalNumberOfCorrectFound()));
+        try {
+            MGridLayout grid = new MGridLayout(2, 6);
+            grid.with(label("Erstellte Anonymisierungen"), label(data.getTotalGenerated()));
+            grid.with(label("Manuell berichtigt"), label(data.getTotalCorrected()));
+            grid.with(label("Korrekt gefunden"), label(data.getTotalNumberOfCorrectFound()));
 
-        grid.with(label("Precision insgesamt"), label(data.getOverallPrecision()));
-        grid.with(label("Recall insgesamt"), label(data.getOverallRecall()));
-        grid.with(label("F1 insgesamt"), label(data.getOverallFOne()));
-        return new MPanel(grid.withMargin(true)).withCaption("Statistik");
+            grid.with(label("Precision insgesamt"), label(data.getOverallPrecision()));
+            grid.with(label("Recall insgesamt"), label(data.getOverallRecall()));
+            grid.with(label("F1 insgesamt"), label(data.getOverallFOne()));
+            return new MPanel(grid.withMargin(true)).withCaption("Statistik");
+        } catch (Exception e) {
+            log.severe(e.getLocalizedMessage());
+            return new MLabel(e.getLocalizedMessage());
+        }
+
+
     }
 
     private MLabel label(Object object) {
