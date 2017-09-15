@@ -46,7 +46,7 @@ public class DashboardView extends BaseView {
         docGrid.addColumn(d -> d.getAnonymizations() == null ? '-' : d.getAnonymizations().size()).setCaption("Anonymizations");
 
         docGrid.setRows(getContent());
-        addComponent(new MVerticalLayout().add(scoreOverview(evaluationDataResource.findById(null)))
+        addComponent(new MVerticalLayout().add(scoreOverview(evaluationDataResource))
                 .add(docGrid.withCaption("Zuletzt bearbeitet")));
 
 
@@ -55,7 +55,7 @@ public class DashboardView extends BaseView {
 
     private List<Document> getContent() {
         try {
-            List<Document> all = documentResource.findAll();
+            List<Document> all = documentResource.findAll(0);
             Collections.sort(all, Comparator.comparing(Document::getLastModified));
             return all.subList(0, Math.min(10, all.size()));
         } catch (Exception e) {
@@ -66,8 +66,9 @@ public class DashboardView extends BaseView {
     }
 
 
-    private Component scoreOverview(EvaluationData data) {
+    private Component scoreOverview(EvaluationDataResource res) {
         try {
+            EvaluationData data = res.findById(null);
             MGridLayout grid = new MGridLayout(2, 6);
             grid.with(label("Erstellte Anonymisierungen"), label(data.getTotalGenerated()));
             grid.with(label("Manuell berichtigt"), label(data.getTotalCorrected()));

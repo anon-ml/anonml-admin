@@ -17,6 +17,7 @@ import ml.anon.ui.admin.dashboard.DashboardView;
 import ml.anon.ui.admin.logs.LogsView;
 import ml.anon.ui.admin.ml.MLView;
 import ml.anon.ui.admin.rules.RulesView;
+import ml.anon.ui.management.DocumentOverviewView;
 
 /**
  * Created by mirco on 16.08.17.
@@ -40,6 +41,10 @@ public class BaseUI extends UI {
     @Resource
     private MLView mlView;
 
+
+    @Resource
+    private DocumentOverviewView docView;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         getPage().setTitle("AnonML Admin");
@@ -59,6 +64,7 @@ public class BaseUI extends UI {
         navigator.addView(RulesView.ID, rulesView);
         navigator.addView(LogsView.ID, logsView);
         navigator.addView(MLView.ID, mlView);
+        navigator.addView(DocumentOverviewView.ID, docView);
         setContent(base);
 
     }
