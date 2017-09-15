@@ -1,19 +1,12 @@
-package ml.anon.admin.rules;
+package ml.anon.ui.admin.rules;
 
 import com.google.common.base.Joiner;
-import com.vaadin.data.provider.AbstractBackEndDataProvider;
-import com.vaadin.data.provider.Query;
-import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
-import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import ml.anon.admin.BaseView;
+import ml.anon.ui.common.BaseView;
 import ml.anon.recognition.rulebased.api.model.Rule;
 import ml.anon.recognition.rulebased.api.resource.RuleResource;
 import org.apache.commons.lang.BooleanUtils;

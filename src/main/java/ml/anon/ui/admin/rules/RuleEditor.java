@@ -1,4 +1,4 @@
-package ml.anon.admin.rules;
+package ml.anon.ui.admin.rules;
 
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;

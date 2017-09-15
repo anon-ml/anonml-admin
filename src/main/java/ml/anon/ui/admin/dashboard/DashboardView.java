@@ -1,34 +1,23 @@
-package ml.anon.admin.dashboard;
+package ml.anon.ui.admin.dashboard;
 
-import com.google.common.collect.Iterables;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.navigator.View;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
 import lombok.extern.java.Log;
-import ml.anon.admin.BaseView;
+import ml.anon.ui.common.BaseView;
 import ml.anon.documentmanagement.model.Document;
 import ml.anon.documentmanagement.resource.DocumentResource;
 import ml.anon.recognition.machinelearning.model.EvaluationData;
 import ml.anon.recognition.machinelearning.resource.EvaluationDataResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.dialogs.ConfirmDialog;
-import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.grid.MGrid;
 import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MGridLayout;
-import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MPanel;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
-import javax.annotation.Resource;
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**

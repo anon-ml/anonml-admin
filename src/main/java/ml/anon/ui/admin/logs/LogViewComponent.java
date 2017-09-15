@@ -1,4 +1,4 @@
-package ml.anon.admin.logs;
+package ml.anon.ui.admin.logs;
 
 import com.cedarsoftware.util.io.JsonWriter;
 import com.vaadin.icons.VaadinIcons;
@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 

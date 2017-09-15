@@ -1,4 +1,4 @@
-package ml.anon.admin;
+package ml.anon.ui.common;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
@@ -13,10 +13,10 @@ import com.vaadin.ui.VerticalLayout;
 import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
-import ml.anon.admin.dashboard.DashboardView;
-import ml.anon.admin.logs.LogsView;
-import ml.anon.admin.ml.MLView;
-import ml.anon.admin.rules.RulesView;
+import ml.anon.ui.admin.dashboard.DashboardView;
+import ml.anon.ui.admin.logs.LogsView;
+import ml.anon.ui.admin.ml.MLView;
+import ml.anon.ui.admin.rules.RulesView;
 
 /**
  * Created by mirco on 16.08.17.

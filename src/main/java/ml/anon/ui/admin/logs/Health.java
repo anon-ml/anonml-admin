@@ -1,4 +1,4 @@
-package ml.anon.admin.logs;
+package ml.anon.ui.admin.logs;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.beans.ConstructorProperties;
