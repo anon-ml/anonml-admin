@@ -38,6 +38,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -67,11 +68,21 @@ public class DocumentOverviewView extends BaseView {
         grid.addComponentColumn((d) -> new MHorizontalLayout(new MButton(FontAwesome.PENCIL, (e) -> {
         }).withStyleName(ValoTheme.BUTTON_BORDERLESS), initDownloadButton(d, "http://localhost:9001/document/" + d.getId() + "/export", FontAwesome.DOWNLOAD),
                 initDownloadButton(d, "", FontAwesome.FILE_TEXT_O))).setCaption("");
-        grid.setItems(documentResource.findAll(-1));
+
+        grid.setItems(getDocuments());
 
         grid.setSizeFull();
 
         addComponent(grid);
+    }
+
+    private List<Document> getDocuments() {
+        try {
+            return documentResource.findAll(-1);
+        } catch (Exception e) {
+            log.info(e.getLocalizedMessage());
+            return new ArrayList<>();
+        }
     }
 
 
