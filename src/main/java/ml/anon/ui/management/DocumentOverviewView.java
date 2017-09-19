@@ -28,6 +28,7 @@ import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 import org.vaadin.viritin.v7.fields.MTable;
+import server.droporchoose.UploadComponent;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -47,33 +48,39 @@ import java.util.stream.Stream;
 public class DocumentOverviewView extends BaseView {
 
 
-    public static final String ID = "OVERVIEW";
+    public static final String ID = "";
 
     @Resource
     private DocumentResource documentResource;
 
-
     private Grid<Document> grid;
+
+    private UploadComponent bulkUpload;
 
 
     @PostConstruct
     private void init() {
-        grid = new Grid<Document>(Document.class
-        );
+        grid = new Grid<Document>(Document.class);
         grid.setColumns("fileName");
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getCreated()))).setCaption("Erstellt");
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getLastModified()))).setCaption("Letzte Änderung");
 
         grid.addComponentColumn((d) -> new MHorizontalLayout(new MButton(FontAwesome.PENCIL, (e) -> {
+            getUI().getPage().open("http://localhost:9000/document/" + d.getId(), "", false);
         }).withStyleName(ValoTheme.BUTTON_BORDERLESS), initDownloadButton(d, "http://localhost:9001/document/" + d.getId() + "/export", FontAwesome.DOWNLOAD),
                 initDownloadButton(d, "", FontAwesome.FILE_TEXT_O))).setCaption("");
         grid.setItems(documentResource.findAll(-1));
 
         grid.setSizeFull();
 
-        addComponent(grid);
+        addComponent(new MVerticalLayout().add(buildUpload(documentResource)).add(grid, 0.8f).withFullSize());
     }
 
+    private UploadComponent buildUpload(DocumentResource documentResource) {
+
+        bulkUpload = new UploadComponent((a, b) -> System.out.println(a + " | " + b));
+        return bulkUpload;
+    }
 
     private MButton initDownloadButton(Document doc, String url, FontAwesome icon) {
         MButton button = new MButton(icon).withStyleName(ValoTheme.BUTTON_BORDERLESS);
