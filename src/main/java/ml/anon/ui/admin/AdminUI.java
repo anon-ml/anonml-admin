@@ -1,4 +1,4 @@
-package ml.anon.ui.common;
+package ml.anon.ui.admin;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
@@ -22,10 +22,10 @@ import ml.anon.ui.management.DocumentOverviewView;
 /**
  * Created by mirco on 16.08.17.
  */
-@SpringUI(path = "/")
+@SpringUI(path = "/admin")
 @Theme("valo")
 @Slf4j
-public class BaseUI extends UI {
+public class AdminUI extends UI {
 
     private Navigator navigator;
 
@@ -41,9 +41,6 @@ public class BaseUI extends UI {
     @Resource
     private MLView mlView;
 
-
-    @Resource
-    private DocumentOverviewView docView;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -64,7 +61,7 @@ public class BaseUI extends UI {
         navigator.addView(RulesView.ID, rulesView);
         navigator.addView(LogsView.ID, logsView);
         navigator.addView(MLView.ID, mlView);
-        navigator.addView(DocumentOverviewView.ID, docView);
+
         setContent(base);
 
     }
