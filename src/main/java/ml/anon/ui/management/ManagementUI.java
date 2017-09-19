@@ -27,7 +27,7 @@ public class ManagementUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        getPage().setTitle("AnonML Admin");
+        getPage().setTitle("AnonML Dokumentenmanagement");
 
         VerticalLayout base = new VerticalLayout();
         base.setSizeFull();
@@ -42,5 +42,7 @@ public class ManagementUI extends UI {
         navigator = new Navigator(this, container);
         navigator.addView(DocumentOverviewView.ID, docView);
         setContent(base);
+        setPollInterval(60000);
+        addPollListener(docView);
     }
 }

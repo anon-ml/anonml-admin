@@ -4,6 +4,7 @@ import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.DataProviderListener;
 import com.vaadin.data.provider.Query;
+import com.vaadin.event.UIEvents;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.FontAwesome;
@@ -11,10 +12,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.shared.Registration;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Link;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
@@ -25,6 +23,7 @@ import org.glassfish.jersey.jaxb.internal.DocumentProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.vaadin.addons.ToastPosition;
 import org.vaadin.addons.Toastr;
+import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.viritin.LazyList;
 import org.vaadin.viritin.MSize;
 import org.vaadin.viritin.button.MButton;
@@ -53,7 +52,7 @@ import java.util.stream.Stream;
 @SpringComponent
 @UIScope
 @Log
-public class DocumentOverviewView extends BaseView {
+public class DocumentOverviewView extends BaseView implements UIEvents.PollListener {
 
 
     public static final String ID = "";
@@ -73,19 +72,27 @@ public class DocumentOverviewView extends BaseView {
 
     private Toastr toastr = new Toastr();
 
+
     @PostConstruct
     private void init() {
         toastr.setSizeUndefined();
         toastr.addStyleName(ValoTheme.LABEL_BOLD);
         grid = new Grid<Document>(Document.class);
-        grid.setColumns("fileName");
+        grid.setColumns("fileName", "version");
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getCreated()))).setCaption("Erstellt");
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getLastModified()))).setCaption("Letzte Änderung");
 
         grid.addComponentColumn((d) -> new MHorizontalLayout(new MButton(FontAwesome.PENCIL, (e) -> {
             getUI().getPage().open(frontEndUrl + "/document/" + d.getId(), "", false);
         }).withStyleName(ValoTheme.BUTTON_BORDERLESS), initDownloadButton(d.fileNameAs("zip"), baseUrl + "/document/" + d.getId() + "/export", FontAwesome.DOWNLOAD),
-                initDownloadButton(d.getFileName(), baseUrl + "/document/" + d.getId() + "/original", FontAwesome.FILE_TEXT_O))).setCaption("");
+                initDownloadButton(d.getFileName(), baseUrl + "/document/" + d.getId() + "/original", FontAwesome.FILE_TEXT_O), new MButton(FontAwesome.TRASH, (e) -> {
+            ConfirmDialog.show(UI.getCurrent(), (ee) -> {
+                documentResource.delete(d.getId());
+                grid.setItems(documentResource.findAll(-1));
+            });
+
+
+        }).withStyleName(ValoTheme.BUTTON_BORDERLESS))).setCaption("");
         grid.setItems(documentResource.findAll(-1));
 
         grid.setSizeFull();
@@ -135,4 +142,10 @@ public class DocumentOverviewView extends BaseView {
         return button;
     }
 
+    @Override
+    public void poll(UIEvents.PollEvent event) {
+        if (grid != null && documentResource != null) {
+            grid.setItems(documentResource.findAll(-1));
+        }
+    }
 }
