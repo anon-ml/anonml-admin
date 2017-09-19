@@ -70,13 +70,13 @@ public class DashboardView extends BaseView {
         try {
             EvaluationData data = res.findById(null);
             MGridLayout grid = new MGridLayout(2, 6);
-            grid.with(label("Erstellte Anonymisierungen"), label(data.getTotalGenerated()));
-            grid.with(label("Manuell berichtigt"), label(data.getTotalCorrected()));
-            grid.with(label("Korrekt gefunden"), label(data.getTotalNumberOfCorrectFound()));
+            grid.with(label("Erstellte Anonymisierungen"), label(data.getGenerated()));
+            grid.with(label("Manuell berichtigt"), label(data.getCorrected()));
+            grid.with(label("Korrekt gefunden"), label(data.getCorrectFound()));
 
-            grid.with(label("Precision insgesamt"), label(data.getOverallPrecision()));
-            grid.with(label("Recall insgesamt"), label(data.getOverallRecall()));
-            grid.with(label("F1 insgesamt"), label(data.getOverallFOne()));
+            grid.with(label("Precision insgesamt"), label(data.getPrecision()));
+            grid.with(label("Recall insgesamt"), label(data.getRecall()));
+            grid.with(label("F1 insgesamt"), label(data.getFOne()));
             return new MPanel(grid.withMargin(true)).withCaption("Statistik");
         } catch (Exception e) {
             log.severe(e.getLocalizedMessage());
