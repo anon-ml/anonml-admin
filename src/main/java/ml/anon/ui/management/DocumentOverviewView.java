@@ -19,6 +19,7 @@ import lombok.extern.java.Log;
 import ml.anon.documentmanagement.model.Document;
 import ml.anon.documentmanagement.resource.DocumentResource;
 import ml.anon.ui.common.BaseView;
+import org.apache.poi.ss.formula.functions.T;
 import org.glassfish.jersey.jaxb.internal.DocumentProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.vaadin.addons.ToastPosition;
@@ -70,13 +71,10 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
 
     private UploadComponent bulkUpload;
 
-    private Toastr toastr = new Toastr();
-
 
     @PostConstruct
     private void init() {
-        toastr.setSizeUndefined();
-        toastr.addStyleName(ValoTheme.LABEL_BOLD);
+
         grid = new Grid<Document>(Document.class);
         grid.setColumns("fileName", "version");
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getCreated()))).setCaption("Erstellt");
@@ -97,7 +95,7 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
 
         grid.setSizeFull();
 
-        addComponent(new MVerticalLayout().add(new MLabel("Dokumentenmanagement").withStyleName(ValoTheme.LABEL_H2), 0.05f).add(buildUpload(documentResource), 0.1f).add(grid, 0.85f).add(toastr, 0f).withFullSize());
+        addComponent(new MVerticalLayout().add(new MLabel("Dokumentenmanagement").withStyleName(ValoTheme.LABEL_H2), 0.05f).add(buildUpload(documentResource), 0.1f).add(grid, 0.85f).withFullSize());
 
     }
 
@@ -108,15 +106,14 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
             try {
                 Document doc = documentResource.importDocument(a, Files.readAllBytes(b));
                 grid.setItems(documentResource.findAll(-1));
-                log.info(Objects.toString(doc));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
 
-        bulkUpload.setFailedCallback((a, b) -> toastr.error(a + b));
+        bulkUpload.setFailedCallback((a, b) -> Notification.show(a + "\n" + b, Notification.Type.ERROR_MESSAGE));
         bulkUpload.setStartedCallback((a) ->
-                toastr.info("", "Import für " + a + " gestartet", ToastPosition.Bottom_Right));
+                Notification.show("", "Import für " + a + " gestartet", Notification.Type.TRAY_NOTIFICATION));
         bulkUpload.setSizeFull();
         return bulkUpload;
     }
