@@ -91,11 +91,17 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
 
 
         }).withStyleName(ValoTheme.BUTTON_BORDERLESS))).setCaption("");
-        grid.setItems(documentResource.findAll(-1));
+        try {
+            grid.setItems(documentResource.findAll(-1));
+        } catch (Exception e) {
+            log.severe(e.getLocalizedMessage());
+        }
+
 
         grid.setSizeFull();
 
-        addComponent(new MVerticalLayout().add(new MLabel("Dokumentenmanagement").withStyleName(ValoTheme.LABEL_H2), 0.05f).add(buildUpload(documentResource), 0.1f).add(grid, 0.85f).withFullSize());
+        addComponent(new MVerticalLayout().add(new MLabel("Dokumentenmanagement")
+                .withStyleName(ValoTheme.LABEL_H2), 0.05f).add(buildUpload(documentResource), 0.1f).add(grid, 0.85f).withFullSize());
 
     }
 
