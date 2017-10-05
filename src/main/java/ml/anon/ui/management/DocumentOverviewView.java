@@ -76,7 +76,7 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
     private void init() {
 
         grid = new Grid<Document>(Document.class);
-        grid.setColumns("fileName", "version");
+        grid.setColumns("fileName", "version", "state");
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getCreated()))).setCaption("Erstellt");
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getLastModified()))).setCaption("Letzte Änderung");
 
