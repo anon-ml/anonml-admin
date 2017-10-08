@@ -1,4 +1,4 @@
-package ml.anon.admin;
+package ml.anon.ui.common;
 
 import com.vaadin.navigator.View;
 import com.vaadin.ui.VerticalLayout;
