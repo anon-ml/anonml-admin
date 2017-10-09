@@ -148,7 +148,7 @@ public class MLView extends BaseView {
                         .show("Training data successfully added: " + fileName, Type.TRAY_NOTIFICATION);
             } else {
                 Notification
-                        .show("Fehler while adding: " + fileName, Type.ERROR_MESSAGE);
+                        .show("Error while adding: " + fileName, Type.ERROR_MESSAGE);
             }
 
 
