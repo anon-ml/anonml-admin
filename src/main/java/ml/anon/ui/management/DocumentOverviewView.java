@@ -77,8 +77,8 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
 
         grid = new Grid<Document>(Document.class);
         grid.setColumns("fileName", "version", "state");
-        grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getCreated()))).setCaption("Erstellt");
-        grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getLastModified()))).setCaption("Letzte Änderung");
+        grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getCreated()))).setCaption("Created");
+        grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getLastModified()))).setCaption("Last Change");
 
         grid.addComponentColumn((d) -> new MHorizontalLayout(new MButton(FontAwesome.PENCIL, (e) -> {
             getUI().getPage().open(frontEndUrl + "/document/" + d.getId(), "", false);
@@ -100,7 +100,7 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
 
         grid.setSizeFull();
 
-        addComponent(new MVerticalLayout().add(new MLabel("Dokumentenmanagement")
+        addComponent(new MVerticalLayout().add(new MLabel("Document management")
                 .withStyleName(ValoTheme.LABEL_H2), 0.05f).add(buildUpload(documentResource), 0.1f).add(grid, 0.85f).withFullSize());
 
     }
@@ -119,7 +119,7 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
 
         bulkUpload.setFailedCallback((a, b) -> Notification.show(a + "\n" + b, Notification.Type.ERROR_MESSAGE));
         bulkUpload.setStartedCallback((a) ->
-                Notification.show("", "Import für " + a + " gestartet", Notification.Type.TRAY_NOTIFICATION));
+                Notification.show("", "Started import for " + a, Notification.Type.TRAY_NOTIFICATION));
         bulkUpload.setSizeFull();
         return bulkUpload;
     }
