@@ -48,8 +48,8 @@ public class MLView extends BaseView {
     private final RestTemplate restTemplate = new RestTemplate();
     private final AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
     private Label retrainState = new Label();
-    private Button retrain = new Button("Training starten", FontAwesome.GRADUATION_CAP);
-    Button download = new Button("Trainingsdaten exportieren", FontAwesome.DOWNLOAD);
+    private Button retrain = new Button("Start training", FontAwesome.GRADUATION_CAP);
+    Button download = new Button("Export training data", FontAwesome.DOWNLOAD);
     UploadComponent upload;
     private String url;
 
@@ -58,11 +58,11 @@ public class MLView extends BaseView {
         url = mlUrl;
         initUpload();
         initDownloadButton(download, mlUrl + "/ml/get/training/data/");
-        updateRetrainState("Training läuft seit", mlUrl);
+        updateRetrainState("Training running since", mlUrl);
         retrain.addClickListener(
                 e -> {
                     toggleButtons(false);
-                    updateRetrainState("Training gestartet ", mlUrl);
+                    updateRetrainState("Started training ", mlUrl);
                     asyncRestTemplate.exchange(mlUrl + "/ml/retrain/", HttpMethod.GET, null, Boolean.class)
                             .addCallback(
                                     new ListenableFutureCallback<ResponseEntity<Boolean>>() {
@@ -74,9 +74,9 @@ public class MLView extends BaseView {
                                         @Override
                                         public void onSuccess(ResponseEntity<Boolean> booleanResponseEntity) {
                                             if (booleanResponseEntity.getBody()) {
-                                                updateRetrainState("Training erfolgreich beendet: ", mlUrl);
+                                                updateRetrainState("Training successfully finished: ", mlUrl);
                                             } else {
-                                                updateRetrainState("Training fehlgeschlagen: ", mlUrl);
+                                                updateRetrainState("Training failed: ", mlUrl);
                                             }
                                         }
                                     });
@@ -89,7 +89,7 @@ public class MLView extends BaseView {
                         .withFullWidth(),
                 new MPanel(
                         new MHorizontalLayout(upload).withSpacing(true)
-                                .withMargin(true)).withCaption("Trainingsdaten hinzufügen")
+                                .withMargin(true)).withCaption("Add training data")
                         .withFullWidth());
         addComponent(layout);
     }
@@ -136,19 +136,19 @@ public class MLView extends BaseView {
     @SneakyThrows
     private void uploadReceived(String fileName, Path file) {
         String str = Files.lines(file).collect(Collectors.joining("\n"));
-        ConfirmDialog.show(UI.getCurrent(), "", "Trainingsdaten anhängen oder\n existierende überschreiben?", "Anhängen", "Überschreiben", (e) -> {
+        ConfirmDialog.show(UI.getCurrent(), "", "Append or override training data?", "Append", "Override", (e) -> {
             boolean append = !e.isConfirmed();
             e.close();
-            Notification.show("Trainingsdaten werden importiert ...", Type.TRAY_NOTIFICATION);
+            Notification.show("Training data are imported ...", Type.TRAY_NOTIFICATION);
             Boolean body = restTemplate
                     .exchange(url + "/ml/post/training/data/" + append + "/", HttpMethod.POST, new HttpEntity<>(str),
                             Boolean.class).getBody();
             if (body) {
                 Notification
-                        .show("Trainingsdaten erfolgreich hinzugefügt: " + fileName, Type.TRAY_NOTIFICATION);
+                        .show("Training data successfully added: " + fileName, Type.TRAY_NOTIFICATION);
             } else {
                 Notification
-                        .show("Fehler beim Hinzufügen: " + fileName, Type.ERROR_MESSAGE);
+                        .show("Fehler while adding: " + fileName, Type.ERROR_MESSAGE);
             }
 
 

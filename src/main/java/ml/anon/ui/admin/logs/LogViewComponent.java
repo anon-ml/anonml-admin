@@ -53,7 +53,7 @@ public class LogViewComponent extends VerticalLayout {
 
     logfile(save);
 
-    Button refresh = new Button("Metriken", FontAwesome.REFRESH);
+    Button refresh = new Button("Metrics", FontAwesome.REFRESH);
     refresh.addClickListener(e -> {
       metrics();
     });
@@ -111,7 +111,7 @@ public class LogViewComponent extends VerticalLayout {
   }
 
   private TextArea logView() {
-    TextArea area = new TextArea(title + " Metriken");
+    TextArea area = new TextArea(title + " metrics");
     area.setSizeFull();
 
     return area;

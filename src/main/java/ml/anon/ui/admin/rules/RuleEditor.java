@@ -40,17 +40,17 @@ public class RuleEditor extends VerticalLayout {
 
   private TextArea regExp = new TextArea("RegEx");
 
-  private NumberField order = new NumberField("Gewicht");
+  private NumberField order = new NumberField("Weight");
 
-  private CheckBox active = new CheckBox(("Aktiv"));
+  private CheckBox active = new CheckBox(("Active"));
 
   private ComboBox<Label> label = new ComboBox<>("Label");
 
-  private Button save = new Button("Änderungen Speichern", FontAwesome.SAVE);
+  private Button save = new Button("Save changes", FontAwesome.SAVE);
 
-  private Button delete = new Button("Löschen", FontAwesome.REMOVE);
+  private Button delete = new Button("Delete", FontAwesome.REMOVE);
 
-  private Button create = new Button("Neue Regel anlegen", FontAwesome.PLUS_SQUARE);
+  private Button create = new Button("Add new rule", FontAwesome.PLUS_SQUARE);
 
   private Binder<Rule> binder = new Binder<>(Rule.class);
 
@@ -99,7 +99,7 @@ public class RuleEditor extends VerticalLayout {
         resource.update(rule.getId(), rule);
         onChange(resource, grid);
       } else {
-        Notification.show("Label und RegEx müssen gesetzt sein.", Type.ERROR_MESSAGE);
+        Notification.show("Label and RegEx have to be set.", Type.ERROR_MESSAGE);
       }
     });
     delete.addClickListener(e -> {
