@@ -47,12 +47,12 @@ public class RulesView extends BaseView {
         mainLayout.setSizeFull();
 
         loadRules(ruleResource, editor);
-        grid.addColumn(r -> BooleanUtils.toString(r.isActive(), "T", "F")).setCaption("Aktiv");
+        grid.addColumn(r -> BooleanUtils.toString(r.isActive(), "T", "F")).setCaption("Active");
         Grid.Column<Rule, String> name = grid.addColumn(Rule::getName).setCaption("Name");
         Grid.Column<Rule, ml.anon.anonymization.model.Label> label = grid
                 .addColumn(Rule::getLabel).setCaption("Label");
         Grid.Column<Rule, Double> weight = grid.addColumn(Rule::getWeight)
-                .setCaption("Gewicht");
+                .setCaption("Weight");
         Grid.Column<Rule, String> regEx = grid
                 .addColumn(r -> StringUtils.abbreviate(StringUtils.defaultString(r.getRegExp()), 50))
                 .setCaption("RegEx");

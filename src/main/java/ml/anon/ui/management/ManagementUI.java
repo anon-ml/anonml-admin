@@ -27,7 +27,7 @@ public class ManagementUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        getPage().setTitle("AnonML Dokumentenmanagement");
+        getPage().setTitle("AnonML document management");
 
         VerticalLayout base = new VerticalLayout();
         base.setSizeFull();
