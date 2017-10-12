@@ -64,6 +64,13 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
     @Value("${frontend.service.url}")
     private String frontEndUrl;
 
+    @Value("${web.contextPath}")
+    private String frontEndContextPath;
+
+    @Value("${local}")
+    private boolean local;
+
+
     @Resource
     private DocumentResource documentResource;
 
@@ -81,7 +88,12 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
         grid.addComponentColumn(d -> new MLabel(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(d.getLastModified()))).setCaption("Last Change");
 
         grid.addComponentColumn((d) -> new MHorizontalLayout(new MButton(FontAwesome.PENCIL, (e) -> {
-            getUI().getPage().open(frontEndUrl + "/document/" + d.getId(), "", false);
+            if(local){
+                getUI().getPage().open(frontEndUrl + "/document/" + d.getId(), "", false);
+            } else {
+                getUI().getPage().open(frontEndContextPath + "/document/" + d.getId(), "", false);
+            }
+
         }).withStyleName(ValoTheme.BUTTON_BORDERLESS), initDownloadButton(d.fileNameAs("zip"), baseUrl + "/document/" + d.getId() + "/export", FontAwesome.DOWNLOAD),
                 initDownloadButton(d.getFileName(), baseUrl + "/document/" + d.getId() + "/original", FontAwesome.FILE_TEXT_O), new MButton(FontAwesome.TRASH, (e) -> {
             ConfirmDialog.show(UI.getCurrent(), (ee) -> {
