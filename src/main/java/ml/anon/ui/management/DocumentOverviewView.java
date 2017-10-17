@@ -89,7 +89,7 @@ public class DocumentOverviewView extends BaseView implements UIEvents.PollListe
 
         grid.addComponentColumn((d) -> new MHorizontalLayout(new MButton(FontAwesome.PENCIL, (e) -> {
             if(local){
-                getUI().getPage().open(frontEndUrl + "/document/" + d.getId(), "", false);
+                getUI().getPage().open(frontEndUrl + frontEndContextPath + "/document/" + d.getId(), "", false);
             } else {
                 getUI().getPage().open(frontEndContextPath + "/document/" + d.getId(), "", false);
             }
