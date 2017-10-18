@@ -1,5 +1,6 @@
 package ml.anon.ui.admin.dashboard;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Component;
@@ -10,6 +11,7 @@ import ml.anon.documentmanagement.resource.DocumentResource;
 import ml.anon.recognition.machinelearning.model.EvaluationData;
 import ml.anon.recognition.machinelearning.resource.EvaluationDataResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.grid.MGrid;
 import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MGridLayout;
@@ -18,6 +20,10 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 
 /**
@@ -70,13 +76,9 @@ public class DashboardView extends BaseView {
         try {
             EvaluationData data = res.findById(null);
             MGridLayout grid = new MGridLayout(2, 6);
-            grid.with(label("Generated anonymizations"), label(data.getGenerated()));
-            grid.with(label("Manually corrected"), label(data.getCorrected()));
-            grid.with(label("Correct found"), label(data.getCorrectFound()));
 
-            grid.with(label("Total Precision"), label(data.getPrecision()));
-            grid.with(label("Total Recall"), label(data.getRecall()));
-            grid.with(label("Total F1"), label(data.getFOne()));
+            setScoreData(data, grid, res);
+
             return new MPanel(grid.withMargin(true)).withCaption("Statistics");
         } catch (Exception e) {
             log.severe(e.getLocalizedMessage());
@@ -84,6 +86,28 @@ public class DashboardView extends BaseView {
         }
 
 
+    }
+
+    private void setScoreData(EvaluationData data, MGridLayout grid, EvaluationDataResource res) {
+        grid.removeAllComponents();
+        grid.with(label("Generated anonymizations"), label(data.getGenerated()));
+        grid.with(label("Manually corrected"), label(data.getCorrected()));
+        grid.with(label("Correct found"), label(data.getCorrectFound()));
+
+        grid.with(label("Total Precision"), label(data.getPrecision()));
+        grid.with(label("Total Recall"), label(data.getRecall()));
+        grid.with(label("Total F1"), label(data.getFOne()));
+        grid.with(new MButton(FontAwesome.REFRESH, "Reset", (e) -> {
+            setScoreData(res.reset(), grid, res);
+        }), dateLabel(data.getLastReset()));
+    }
+
+    private MLabel dateLabel(Date date) {
+        if (date == null) {
+            return new MLabel("");
+        } else {
+            return new MLabel(new SimpleDateFormat("dd.MM.yyyy").format(date));
+        }
     }
 
     private MLabel label(Object object) {
